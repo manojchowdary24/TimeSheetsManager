@@ -17,7 +17,8 @@ module.exports = {
     "^.+\\.module\\.(css|sass|scss)$",
   ],
   moduleNameMapper: {
-    "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+    "^.+\\.(css|less|scss)$": "babel-jest",
+    "^.+\\.(jpg|png|gif|svg)$": "identity-obj-proxy",
   },
   moduleFileExtensions: [
     "web.js",
