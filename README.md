@@ -1,9 +1,13 @@
 # TimeSheetsManager
 
 **_Dependencies_**
+
+```
 Java
 Maven
 Node
+Docker
+```
 
 **_Running the App:_**
 
@@ -12,8 +16,9 @@ Node
 ```
 1) git clone https://github.com/manojchowdary24/TimeSheetsManager.git  // will clone the application to your current directory
 2) cd TimesheetsManager/  // changing your current directory to TimesheetsManager
-3) mvn clean install  //This will run all the packaging for Frontend and backend.
-4) mvn spring-boot:run //This command is used to spin up the application.
+3) docker-compose up -d postgres
+4) mvn clean install  //This will run all the packaging for Frontend and backend.
+5) mvn spring-boot:run //This command is used to spin up the application.
 ```
 
 - Once everything looks goood. Please go to the following url. http://localhost:8080
