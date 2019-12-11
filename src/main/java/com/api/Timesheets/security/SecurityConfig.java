@@ -21,7 +21,9 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true,
+    jsr250Enabled = true,
+    prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Resource(name = "userService")
@@ -44,10 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-        http
-    .authorizeRequests()
-        .antMatchers("/auth/**")
-        .permitAll();
+    http
+        .csrf().disable()
+        .anonymous().disable()
+        .authorizeRequests()
+        .antMatchers("/**").permitAll();
+
   }
 
   @Bean

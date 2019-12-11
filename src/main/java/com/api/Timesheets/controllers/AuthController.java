@@ -4,6 +4,7 @@ package com.api.Timesheets.controllers;
 import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
 import com.api.Timesheets.repositories.UserRepo;
+import com.api.Timesheets.security.OauthTokenResponse;
 import com.api.Timesheets.security.TokenProvider;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +36,19 @@ public class AuthController {
   private TokenProvider tokenProvider;
 
   @PostMapping("/login")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-    System.out.println("Auth started");
+  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest)
+      throws Exception {
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             loginRequest.getUsername(),
             loginRequest.getPassword()
         )
     );
-    System.out.println("Auth done");
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    String token = tokenProvider.createToken(authentication);
-    return ResponseEntity.ok(new AuthResponse(token));
+    OauthTokenResponse resp = tokenProvider.getToken(loginRequest.getUsername(),
+                loginRequest.getPassword());
+    return ResponseEntity.ok(new AuthResponse(resp.getAccessToken()));
   }
 }
 

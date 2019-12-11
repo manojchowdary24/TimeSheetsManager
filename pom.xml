@@ -21,7 +21,6 @@
 		<yarn.version>6.12.0</yarn.version>
 	</properties>
 	<repositories>
-		<!-- ... possibly other repository elements ... -->
 		<repository>
 			<id>spring-milestone</id>
 			<name>Spring Milestone Repository</name>
@@ -86,7 +85,7 @@
 
 	<build>
 		<plugins>
-			<plugin>s
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
@@ -136,7 +135,7 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<target>
-								<copy todir="${project.build.directory}/classes/public">
+								<copy todir="${project.build.directory}/classes/static">
 									<fileset dir="${project.basedir}/client/build"/>
 								</copy>
 							</target>
