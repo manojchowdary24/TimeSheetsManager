@@ -3,6 +3,7 @@ package com.api.Timesheets.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,24 +12,29 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class TokenProvider {
 
-  static final String CLIENT_ID = "timesheets-management-client";
-  static final String CLIENT_SECRET = "timesheets-management-secret";
-  static final String GRANT_TYPE_PASSWORD = "password";
-
   @Autowired
   private RestTemplate restTemplate;
 
   @Autowired
   private ObjectMapper objectMapper;
 
+  @Value("${timesheets-management.clientId}")
+  private String clientId;
+
+  @Value("${timesheets-management.clientSecret}")
+  private String clientSecret;
+
+  @Value("${timesheets-management.grant-type}")
+  private String grantType;
+
 
   public OauthTokenResponse getToken(String userName,String password) throws Exception {
     final String urlWithParms =
         "http://localhost:8080/oauth/token" + "?username=" + userName
-            + "&grant_type="+ GRANT_TYPE_PASSWORD
+            + "&grant_type="+ grantType
             + "&password=" + password
-            + "&client_id=" +CLIENT_ID
-            +"&client_secret="+CLIENT_SECRET;
+            + "&client_id=" +clientId
+            +"&client_secret="+clientSecret;
     final ResponseEntity<String> response = restTemplate
         .exchange(urlWithParms, HttpMethod.POST,
             null, String.class);
