@@ -1,12 +1,13 @@
 import React from "react";
-import Form from "components/Form";
+import Login from "./containers/Login";
+import { ApolloProvider } from "@apollo/react-hooks";
+import client from "./constants/graphql/client";
 
 const App: React.FC = () => {
   return (
-    <div>
-      <Form />
-      <h1>Hello World!</h1>
-    </div>
+    <ApolloProvider client={client}>
+      <Login />
+    </ApolloProvider>
   );
 };
 
