@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS users;
+
 create table users
 (
    id serial not null
