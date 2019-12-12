@@ -5,3 +5,4 @@ node_modules
 tslint.json 
 tsconfig.json
 index.html
+graphql

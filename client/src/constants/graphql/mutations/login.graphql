@@ -1,0 +1,11 @@
+mutation login($input: LoginInput!) {
+    login(input: $input)
+      @rest(
+        type: "User"
+        path: "/auth/login"
+        method: "POST"
+      ) {
+       accessToken
+       tokenType
+    }
+  }
