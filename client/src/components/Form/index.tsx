@@ -3,6 +3,7 @@ import useForm from "react-hook-form";
 import Button, { ButtonProps } from "@material-ui/core/Button";
 import { FormInput, createFormSchema } from "./utils/validationSchema";
 import { mapInputToFormField } from "./utils";
+import ErrorMessage from "../ErrorMessage";
 
 interface FormProps {
   mode?: "onBlur" | "onChange" | "onSubmit";
@@ -10,6 +11,7 @@ interface FormProps {
   inputs: FormInput[];
   buttonProps: ButtonProps;
   buttonText?: string;
+  formStyles?: React.CSSProperties;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -18,21 +20,26 @@ const Form: React.FC<FormProps> = ({
   inputs,
   buttonProps,
   buttonText = "Submit",
+  formStyles,
 }) => {
-  const { register, handleSubmit, errors } = useForm({
+  const { register, handleSubmit, errors, formState } = useForm({
     validationSchema: createFormSchema(inputs),
     mode,
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form style={formStyles} onSubmit={handleSubmit(onSubmit)}>
       {inputs.map((input: FormInput) => (
-        <div key={input.id}>
+        <div style={input.style} key={input.id}>
           {mapInputToFormField(input, register, errors)}
-          {errors[input.name] && <p>{String(errors[input.name].message)}</p>}
+          {errors[input.name] && (
+            <ErrorMessage errorMessage={String(errors[input.name].message)} />
+          )}
         </div>
       ))}
-      <Button {...buttonProps}>{buttonText}</Button>
+      <Button disabled={!formState.isValid} {...buttonProps}>
+        {buttonText}
+      </Button>
     </form>
   );
 };

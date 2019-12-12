@@ -1,3 +1,4 @@
+import React from "react";
 import * as yup from "yup";
 
 export enum FormInputType {
@@ -11,6 +12,7 @@ export interface FormInput {
   type: FormInputType;
   name: string;
   label: string;
+  style?: React.CSSProperties;
 }
 
 export const createFormSchema = (formInputs: FormInput[]) => {
