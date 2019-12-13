@@ -15,7 +15,7 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({
-  mode = "onBlur",
+  mode = "onChange",
   onSubmit,
   inputs,
   buttonProps,
