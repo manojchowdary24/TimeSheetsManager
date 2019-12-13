@@ -13,19 +13,19 @@ const CONTAINER_STYLES: React.CSSProperties = {
   flexDirection: "column",
 };
 
+const LINK_CONTAINER_STYLES: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "space-evenly",
+  width: "25%",
+  marginTop: "1rem",
+};
+
 const INPUT_STYLES: React.CSSProperties = {
   width: "100%",
 };
 
 const FORM_STYLES: React.CSSProperties = {
-  width: "50%",
-};
-
-const LINK_CONTAINER_STYLES: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "space-evenly",
-  width: "50%",
-  marginTop: "1rem",
+  width: "20%",
 };
 
 const inputs: FormInput[] = [
@@ -59,13 +59,13 @@ const Login: React.FC<LoginProps> = ({ onSubmit }) => {
           color: "primary",
           style: { marginTop: "1rem", width: "100%" },
         }}
+        formStyles={FORM_STYLES}
         inputs={inputs}
         onSubmit={onSubmit}
-        formStyles={FORM_STYLES}
       />
       <div style={LINK_CONTAINER_STYLES}>
         <a>Forgot Password</a>
-        <a>Register</a>
+        <a>Request Access</a>
       </div>
     </div>
   );
