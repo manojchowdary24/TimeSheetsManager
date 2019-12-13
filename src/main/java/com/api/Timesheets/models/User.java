@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.joda.time.LocalDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,8 +45,11 @@ public class User implements UserDetails {
   @Column(name = "change_password_required")
   private Boolean changePasswordRequired;
 
-  @Column(name =  "password_expiration_date")
-  private Boolean passwordExpirationDate;
+  @Column(name =  "reset_pw_token_exp_date")
+  private LocalDate tokenExpDate;
+
+  @Column(name = "reset_password_token")
+  private String resetPasswordToken;
 
   @Column(name = "permissions_set")
   private String permissionsSet;
@@ -54,13 +58,13 @@ public class User implements UserDetails {
   private Date createDate;
 
   @Column(name = "created_by")
-  private Date createBy;
+  private String createBy;
 
   @Column(name = "update_date")
   private Date updateDate;
 
   @Column(name = "update_by")
-  private Date updateBy;
+  private String updateBy;
 
   @Column
   private String password;
