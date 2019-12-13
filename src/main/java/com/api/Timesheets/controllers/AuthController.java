@@ -59,7 +59,7 @@ public class AuthController {
   @PostMapping(path = "/{email}/resetPassword", produces = APPLICATION_JSON_VALUE)
   public void resetPassword(@PathVariable String email) {
     userService.resetPassword(email).orElseThrow(
-        () -> new GlobalException(HttpStatus.NOT_FOUND.value(), "External user not found."));
+        () -> new GlobalException(HttpStatus.NOT_FOUND.value(), "User not found."));
   }
 }
 
