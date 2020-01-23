@@ -7,6 +7,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.Arrays;
+
+import static com.api.Timesheets.utils.CookieUtils.TOKEN;
 
 @Configuration
 @EnableResourceServer
@@ -16,16 +21,19 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId(RESOURCE_ID).stateless(false);
+//        resources.tokenExtractor(new CustomTokenExtractor());
+//        resources.resourceId(RESOURCE_ID).stateless(false);
+        resources.tokenExtractor(new BearerCookiesTokenExtractor());
+        resources.authenticationEntryPoint(new InvalidTokenEntryPoint());
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http
+        http.requestMatcher(withCookieToken())
                 .cors()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .cors()
                 .disable()
@@ -49,6 +57,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+    }
+
+    private RequestMatcher withCookieToken() {
+        return request -> request.getCookies() != null && Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals(TOKEN));
     }
 
 }

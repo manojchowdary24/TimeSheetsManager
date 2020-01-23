@@ -58,6 +58,7 @@ public class AuthController {
                 loginRequest.getPassword());
     response.addCookie(CookieUtils.createCookie(USER,loginRequest.getUsername()));
     response.addCookie(CookieUtils.createCookie(TOKEN,resp.getAccessToken()));
+
     return ResponseEntity.ok(new AuthResponse(resp.getAccessToken()));
   }
 
