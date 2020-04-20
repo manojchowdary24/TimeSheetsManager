@@ -1,17 +1,12 @@
 package com.api.Timesheets.services;
 
 
-import static com.api.Timesheets.config.ModelToHtmlConverter.RESET_PASSWORD_USER_HTML_TEMPLATE;
-
 import com.api.Timesheets.config.ModelToHtmlConverter;
-import com.api.Timesheets.models.User;
 import com.api.Timesheets.models.EmailDTO;
+import com.api.Timesheets.models.User;
 import com.api.Timesheets.repositories.UserRepo;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import org.apache.commons.lang3.RandomStringUtils;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static com.api.Timesheets.config.ModelToHtmlConverter.RESET_PASSWORD_USER_HTML_TEMPLATE;
 
 @Service(value = "userService")
 class UserServiceImpl implements UserDetailsService, UserService {
@@ -47,7 +48,7 @@ class UserServiceImpl implements UserDetailsService, UserService {
   private EmailService emailService;
 
   public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-    User user = userDao.findByUsername(userId);
+    User user = userDao.findByUsernameIgnoreCase(userId);
     if(user == null){
       throw new UsernameNotFoundException("Invalid username or password.");
     }
