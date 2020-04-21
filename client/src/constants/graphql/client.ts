@@ -9,7 +9,10 @@ const setLocalState = () => {
   client.cache.writeData({ data: localState });
 };
 
-const restLink = new RestLink({ uri: "http://localhost:8080" });
+const restLink = new RestLink({
+  uri: "http://localhost:8080",
+  credentials: "include",
+});
 
 const client = new ApolloClient({
   link: restLink,
