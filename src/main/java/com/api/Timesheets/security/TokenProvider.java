@@ -1,13 +1,18 @@
 package com.api.Timesheets.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 @Service
 public class TokenProvider {
@@ -26,6 +31,9 @@ public class TokenProvider {
 
   @Value("${timesheets-management.grant-type}")
   private String grantType;
+
+  @Autowired
+  private TokenStore tokenStore;
 
 
   public OauthTokenResponse getToken(String userName,String password) throws Exception {
@@ -50,4 +58,19 @@ public class TokenProvider {
 
   }
 
+  public Boolean validateToken(String token){
+    OAuth2AccessToken accessToken = tokenStore.readAccessToken(token);
+    if (accessToken == null) {
+      throw new InvalidTokenException("Invalid access token: " + token);
+    } else if (accessToken.isExpired()) {
+      tokenStore.removeAccessToken(accessToken);
+      throw new InvalidTokenException("Access token expired: " + token.substring(0,200));
+    }
+    OAuth2Authentication auth  = tokenStore.readAuthentication(accessToken);
+    return auth.isAuthenticated();
+  }
+
+  public String getUserNameFromRequest(String jwt) {
+    return null;
+  }
 }

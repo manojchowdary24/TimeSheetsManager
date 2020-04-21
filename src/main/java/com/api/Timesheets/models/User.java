@@ -1,14 +1,6 @@
 package com.api.Timesheets.models;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +8,11 @@ import org.joda.time.LocalDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Data
@@ -46,12 +43,15 @@ public class User implements UserDetails {
   private Boolean changePasswordRequired;
 
   @Column(name =  "reset_pw_token_exp_date")
+  @JsonIgnore
   private LocalDate tokenExpDate;
 
   @Column(name = "reset_password_token")
+  @JsonIgnore
   private String resetPasswordToken;
 
   @Column(name = "permissions_set")
+  @JsonIgnore
   private String permissionsSet;
 
   @Column(name = "create_date")
@@ -67,9 +67,11 @@ public class User implements UserDetails {
   private String updateBy;
 
   @Column
+  @JsonIgnore
   private String password;
 
   @Override
+  @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Arrays.asList(new SimpleGrantedAuthority(this.permissionsSet));
   }
