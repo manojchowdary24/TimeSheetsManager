@@ -3,6 +3,7 @@ package com.api.Timesheets.utils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.Optional;
 
 public final class CookieUtils {
 
@@ -27,15 +28,15 @@ public final class CookieUtils {
         return null;
     }
 
-    public static String getTokenFromRequest(HttpServletRequest request) {
+    public static Optional<String> getTokenFromRequest(HttpServletRequest request) {
         final Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            return null;
+            return Optional.empty();
         }
         return Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(TOKEN))
                 .findFirst()
-                .map(Cookie::getValue).orElse(null);
+                .map(Cookie::getValue);
     }
 
     public static Cookie expireCookie(String cookieName) {

@@ -16,54 +16,55 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-  static final String AUTHORIZATION_CODE = "authorization_code";
-  static final String REFRESH_TOKEN = "refresh_token";
-  static final String IMPLICIT = "implicit";
-  static final String SCOPE_READ = "read";
-  static final String SCOPE_WRITE = "write";
-  static final String TRUST = "trust";
-  static final int ACCESS_TOKEN_VALIDITY_SECONDS = 1*60*60;
-  static final int FREFRESH_TOKEN_VALIDITY_SECONDS = 6*60*60;
+    static final String AUTHORIZATION_CODE = "authorization_code";
+    static final String REFRESH_TOKEN = "refresh_token";
+    static final String IMPLICIT = "implicit";
+    static final String SCOPE_READ = "read";
+    static final String SCOPE_WRITE = "write";
+    static final String TRUST = "trust";
+    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 1 * 60 * 60;
+    static final int FREFRESH_TOKEN_VALIDITY_SECONDS = 6 * 60 * 60;
 
-  @Value("${timesheets-management.clientId}")
-  private String clientId;
+    @Value("${timesheets-management.clientId}")
+    private String clientId;
 
-  @Value("${timesheets-management.clientSecret}")
-  private String clientSecret;
+    @Value("${timesheets-management.clientSecret}")
+    private String clientSecret;
 
-  @Value("${timesheets-management.grant-type}")
-  private String grantType;
+    @Value("${timesheets-management.grant-type}")
+    private String grantType;
 
-  @Autowired
-  private TokenStore tokenStore;
+    @Autowired
+    private TokenStore tokenStore;
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-  @Autowired
-  private BCryptPasswordEncoder encoder;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
-  @Override
-  public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
+    @Override
+    public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
 
-    configurer
-        .inMemory()
-        .withClient(clientId)
-        .secret(encoder.encode(clientSecret))
-        .authorizedGrantTypes(grantType, AUTHORIZATION_CODE, REFRESH_TOKEN, IMPLICIT)
-        .scopes(SCOPE_READ, SCOPE_WRITE, TRUST)
-        .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS).
-        refreshTokenValiditySeconds(FREFRESH_TOKEN_VALIDITY_SECONDS);
-  }
+        configurer
+                .inMemory()
+                .withClient(clientId)
+                .secret(encoder.encode(clientSecret))
+                .authorizedGrantTypes(grantType, AUTHORIZATION_CODE, REFRESH_TOKEN, IMPLICIT)
+                .scopes(SCOPE_READ, SCOPE_WRITE, TRUST)
+                .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS).
+                refreshTokenValiditySeconds(FREFRESH_TOKEN_VALIDITY_SECONDS);
+    }
 
-  @Override
-  public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-    endpoints.tokenStore(tokenStore)
-        .authenticationManager(authenticationManager);
-  }
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.tokenStore(tokenStore)
+                .authenticationManager(authenticationManager);
+    }
 
-  @Override
-  public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-    oauthServer.allowFormAuthenticationForClients();
-  }
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        oauthServer
+                .checkTokenAccess("permitAll()").allowFormAuthenticationForClients();
+    }
 }
