@@ -23,7 +23,7 @@ import java.util.Optional;
 import static com.api.Timesheets.config.ModelToHtmlConverter.RESET_PASSWORD_USER_HTML_TEMPLATE;
 
 @Service(value = "userService")
-class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserDetailsService, UserService {
 
   @Value("${reset.password.token.expiration.days}")
   private Integer tokenExpirationDays;
