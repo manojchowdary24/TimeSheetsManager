@@ -2,19 +2,16 @@ package com.api.Timesheets.controllers;
 
 
 import com.api.Timesheets.ExceptionHandlers.GlobalException;
-import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
-import com.api.Timesheets.security.OauthTokenResponse;
-import com.api.Timesheets.security.TokenProvider;
 import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
+import com.api.Timesheets.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,10 +34,10 @@ public class AuthController {
   private PasswordEncoder passwordEncoder;
 
   @Autowired
-  private TokenProvider tokenProvider;
+  private UserService userService;
 
   @Autowired
-  private UserService userService;
+  private JWTUtil jwtUtil;
 
   @PostMapping("/login")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request,
@@ -52,14 +49,12 @@ public class AuthController {
             loginRequest.getPassword()
         )
     );
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+    String token = jwtUtil.generateToken(authentication);
 
-    OauthTokenResponse resp = tokenProvider.getToken(loginRequest.getUsername(),
-                loginRequest.getPassword());
-    response.addCookie(CookieUtils.createCookie(USER,loginRequest.getUsername()));
-    response.addCookie(CookieUtils.createCookie(TOKEN,resp.getAccessToken()));
+    response.addCookie(CookieUtils.createCookie(USER,authentication.getName()));
+    response.addCookie(CookieUtils.createCookie(TOKEN,token));
 
-    return ResponseEntity.ok(new AuthResponse(resp.getAccessToken()));
+    return ResponseEntity.ok("Bearer "+ token);
   }
 
   @PostMapping(path = "/{email}/resetPassword", produces = APPLICATION_JSON_VALUE)
