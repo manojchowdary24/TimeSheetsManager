@@ -11,7 +11,7 @@ const setLocalState = () => {
 
 const restLink = new RestLink({
   uri: "http://localhost:8080",
-  credentials: "include",
+  credentials: "same-origin",
 });
 
 const client = new ApolloClient({
