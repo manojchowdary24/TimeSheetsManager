@@ -1,5 +1,6 @@
-package com.api.Timesheets.security;
+package com.api.Timesheets.utils;
 
+import com.api.Timesheets.models.OauthTokenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 
 @Service
-public class TokenProvider {
+public class OauthUtil {
 
   @Autowired
   private RestTemplate restTemplate;
@@ -36,7 +37,7 @@ public class TokenProvider {
   private TokenStore tokenStore;
 
 
-  public OauthTokenResponse getToken(String userName,String password) throws Exception {
+  public OauthTokenResponse getToken(String userName, String password) throws Exception {
     final String urlWithParms =
         "http://localhost:8080/oauth/token" + "?username=" + userName
             + "&grant_type="+ grantType
@@ -48,6 +49,7 @@ public class TokenProvider {
             null, String.class);
     if (response.getStatusCode().is2xxSuccessful()) {
       try {
+//        tokenStore.
         return objectMapper.readValue(response.getBody(), OauthTokenResponse.class);
       } catch (IOException e) {
         throw new Exception();
