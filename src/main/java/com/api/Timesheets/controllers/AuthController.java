@@ -2,6 +2,7 @@ package com.api.Timesheets.controllers;
 
 
 import com.api.Timesheets.ExceptionHandlers.GlobalException;
+import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
 import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
@@ -54,7 +55,7 @@ public class AuthController {
     response.addCookie(CookieUtils.createCookie(USER,authentication.getName()));
     response.addCookie(CookieUtils.createCookie(TOKEN,token));
 
-    return ResponseEntity.ok("Bearer "+ token);
+    return ResponseEntity.ok(new AuthResponse("Bearer "+ token));
   }
 
   @PostMapping(path = "/{email}/resetPassword", produces = APPLICATION_JSON_VALUE)
