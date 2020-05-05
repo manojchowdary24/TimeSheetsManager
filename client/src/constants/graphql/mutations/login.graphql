@@ -5,7 +5,6 @@ mutation login($input: LoginInput!) {
         path: "/auth/login"
         method: "POST"
       ) {
-       accessToken
-       tokenType
-    }
+        accessToken
+      }
   }

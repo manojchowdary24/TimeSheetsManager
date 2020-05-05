@@ -7,6 +7,9 @@ module.exports = {
     filename: "bundle.[hash].js",
     path: path.resolve(__dirname, "build"),
   },
+  devServer: {
+    historyApiFallback: true,
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./index.html",

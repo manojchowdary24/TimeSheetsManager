@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Application from "./containers/App";
+import Application from "./routers/App";
 import { ApolloProvider } from "@apollo/react-hooks";
 import apolloClient from "./constants/graphql/client";
 import { persistCache } from "apollo-cache-persist";
+import { BrowserRouter } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 const App: React.FC = () => {
@@ -27,10 +28,12 @@ const App: React.FC = () => {
     return <div>Loading...</div>;
   }
   return (
-    <ApolloProvider client={client}>
-      <CssBaseline />
-      <Application />
-    </ApolloProvider>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <CssBaseline />
+        <Application />
+      </ApolloProvider>
+    </BrowserRouter>
   );
 };
 

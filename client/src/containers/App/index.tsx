@@ -1,19 +1,16 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import Login from "../Login";
-import IsAuthenticated from "../../constants/graphql/queries/isAuthenticated.graphql";
 
-const App: React.FC = () => {
-  const { data: { isAuthenicated = false } = {}, client } = useQuery(
-    IsAuthenticated,
-  );
+interface Props {
+  signOut: () => void;
+}
 
-  return isAuthenicated ? (
+const App: React.FC<Props> = ({ signOut }) => {
+  return (
     <div>
-      Hello <button onClick={async () => client.resetStore()}>Sign out</button>
+      Timesheets
+      <p>Hey! Let's clock in.</p>
+      <button onClick={signOut}>Log out</button>
     </div>
-  ) : (
-    <Login />
   );
 };
 
