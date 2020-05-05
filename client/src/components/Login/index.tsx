@@ -47,9 +47,15 @@ const inputs: FormInput[] = [
 
 interface LoginProps {
   onSubmit: (data: any) => void;
+  navigateToForgotPassword: () => void;
+  navigateToRequestAccess: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onSubmit }) => {
+const Login: React.FC<LoginProps> = ({
+  onSubmit,
+  navigateToForgotPassword,
+  navigateToRequestAccess,
+}) => {
   return (
     <div style={CONTAINER_STYLES}>
       <Form
@@ -64,8 +70,8 @@ const Login: React.FC<LoginProps> = ({ onSubmit }) => {
         onSubmit={onSubmit}
       />
       <div style={LINK_CONTAINER_STYLES}>
-        <a>Forgot Password</a>
-        <a>Request Access</a>
+        <a onClick={navigateToForgotPassword}>Update/Reset password</a>
+        <a onClick={navigateToRequestAccess}>Request Access</a>
       </div>
     </div>
   );
