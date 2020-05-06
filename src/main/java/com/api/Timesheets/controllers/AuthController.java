@@ -4,6 +4,7 @@ package com.api.Timesheets.controllers;
 import com.api.Timesheets.ExceptionHandlers.GlobalException;
 import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
+import com.api.Timesheets.models.UpdatePasswordDTO;
 import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
@@ -28,40 +29,47 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/auth")
 public class AuthController {
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private UserService userService;
+    @Autowired
+    private UserService userService;
 
-  @Autowired
-  private JWTUtil jwtUtil;
+    @Autowired
+    private JWTUtil jwtUtil;
 
-  @PostMapping("/login")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request,
-                                            HttpServletResponse response)
-      throws Exception {
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            loginRequest.getUsername(),
-            loginRequest.getPassword()
-        )
-    );
-    String token = jwtUtil.generateToken(authentication);
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request,
+                                              HttpServletResponse response)
+            throws Exception {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+        String token = jwtUtil.generateToken(authentication);
 
-    response.addCookie(CookieUtils.createCookie(USER,authentication.getName()));
-    response.addCookie(CookieUtils.createCookie(TOKEN,token));
+        response.addCookie(CookieUtils.createCookie(USER, authentication.getName()));
+        response.addCookie(CookieUtils.createCookie(TOKEN, token));
 
-    return ResponseEntity.ok(new AuthResponse("Bearer "+ token));
-  }
+        return ResponseEntity.ok(new AuthResponse("Bearer " + token));
+    }
 
-  @PostMapping(path = "/{email}/resetPassword", produces = APPLICATION_JSON_VALUE)
-  public void resetPassword(@PathVariable String email) {
-    userService.resetPassword(email).orElseThrow(
-        () -> new GlobalException(HttpStatus.NOT_FOUND.value(), "User not found."));
-  }
+    @PostMapping(path = "/{email}/resetPassword", produces = APPLICATION_JSON_VALUE)
+    public void resetPassword(@PathVariable String email) {
+        userService.resetPassword(email).orElseThrow(
+                () -> new GlobalException(HttpStatus.NOT_FOUND.value(), "User not found."));
+    }
+
+    @PostMapping(path = "/{email}/updatePassword")
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        userService.updatePassword(updatePasswordDTO).orElseThrow(
+                () -> new GlobalException(HttpStatus.NOT_FOUND.value(), "User not found."));
+        return ResponseEntity.ok("Password Updated Successfully");
+    }
 }
 
