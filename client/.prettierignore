@@ -1,8 +1,0 @@
-package.json
-package-lock.json
-yarn.lock
-node_modules
-tslint.json 
-tsconfig.json
-index.html
-graphql
