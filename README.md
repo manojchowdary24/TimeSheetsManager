@@ -23,6 +23,7 @@ Docker
 
 - Once everything looks goood. Please go to the following url. http://localhost:8080
 
+UI Code has been moved to new repository
 **_Running the UI code Alone:_**
 
 - Once the repo has been cloned change the directory to the ui folder which is
