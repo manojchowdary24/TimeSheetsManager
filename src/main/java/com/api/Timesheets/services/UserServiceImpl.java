@@ -5,6 +5,7 @@ import com.api.Timesheets.config.ModelToHtmlConverter;
 import com.api.Timesheets.models.EmailDTO;
 import com.api.Timesheets.models.UpdatePasswordDTO;
 import com.api.Timesheets.models.User;
+import com.api.Timesheets.models.UserDTO;
 import com.api.Timesheets.repositories.UserRepo;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             String token = generateToken();
             user.setChangePasswordRequired(true);
             user.setResetPasswordToken(passwordEncoder.encode(token));
-            user.setTokenExpDate(LocalDate.now().plusDays(tokenExpirationDays));
+            user.setTokenExpDate(LocalDate.now().plusDays(tokenExpirationDays).toDate());
             user.setActive(false);
             sendResetPasswordEmail(user, token, tokenExpirationDays);
             userDao.save(user);
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private boolean isEligible(UpdatePasswordDTO updatePasswordDTO, User usr) {
         return usr.getChangePasswordRequired() &&
                 passwordEncoder.matches(updatePasswordDTO.getTmpPassword(), usr.getResetPasswordToken()) &&
-                usr.getTokenExpDate().isAfter(LocalDate.now());
+                new LocalDate(usr.getTokenExpDate()).isAfter(LocalDate.now());
     }
 
     private void sendResetPasswordEmail(User user, String token, Integer tokenExpirationDays) {
@@ -128,5 +129,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private String generateToken() {
         return RandomStringUtils.random(12, true, true);
+    }
+
+    @Override
+    public void createUser(UserDTO userDTO){
+        User user = User.fromUserDTO(userDTO);
+        user.setActive(true);
+        user.setPassword(passwordEncoder.encode("password"));
+        user.setChangePasswordRequired(true);
+        userDao.save(user);
+
     }
 }
