@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private boolean isEligible(UpdatePasswordDTO updatePasswordDTO, User usr) {
         return usr.getChangePasswordRequired() &&
-                passwordEncoder.matches(updatePasswordDTO.getTmpPassword(), usr.getResetPasswordToken()) &&
+                passwordEncoder.matches(updatePasswordDTO.getToken(), usr.getResetPasswordToken()) &&
                 new LocalDate(usr.getTokenExpDate()).isAfter(LocalDate.now());
     }
 
