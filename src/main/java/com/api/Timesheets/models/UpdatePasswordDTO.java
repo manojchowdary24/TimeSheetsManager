@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdatePasswordDTO {
 
-    private String email;
     private String tmpPassword;
     private String newPassword;
 

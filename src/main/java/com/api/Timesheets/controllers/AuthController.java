@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +30,6 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService userService;
@@ -66,8 +62,8 @@ public class AuthController {
     }
 
     @PostMapping(path = "/{email}/updatePassword")
-    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
-        userService.updatePassword(updatePasswordDTO).orElseThrow(
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO, @PathVariable String email) {
+        userService.updatePassword(updatePasswordDTO,email).orElseThrow(
                 () -> new GlobalException(HttpStatus.NOT_FOUND.value(), "User not found."));
         return ResponseEntity.ok("Password Updated Successfully");
     }

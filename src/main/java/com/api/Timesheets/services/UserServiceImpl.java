@@ -1,6 +1,7 @@
 package com.api.Timesheets.services;
 
 
+import com.api.Timesheets.ExceptionHandlers.GlobalException;
 import com.api.Timesheets.config.ModelToHtmlConverter;
 import com.api.Timesheets.models.EmailDTO;
 import com.api.Timesheets.models.UpdatePasswordDTO;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -83,15 +85,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Optional<User> updatePassword(UpdatePasswordDTO updatePasswordDTO) {
-        return userDao.findByEmail(updatePasswordDTO.getEmail()).map(usr -> {
+    public Optional<User> updatePassword(UpdatePasswordDTO updatePasswordDTO,String email ) {
+        return userDao.findByEmail(email).map(usr -> {
             if (isEligible(updatePasswordDTO, usr)) {
                 usr.setChangePasswordRequired(false);
                 usr.setActive(true);
-                usr.setPassword(updatePasswordDTO.getNewPassword());
+                usr.setPassword(passwordEncoder.encode(updatePasswordDTO.getNewPassword()));
                 usr.setResetPasswordToken(null);
                 usr.setTokenExpDate(null);
                 userDao.save(usr);
+            }else{
+                throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "Unable to update the password");
             }
             return usr;
         });

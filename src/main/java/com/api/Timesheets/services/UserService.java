@@ -19,7 +19,7 @@ public interface UserService {
 
     public Optional<User> resetPassword(String email);
 
-    Optional<User> updatePassword(UpdatePasswordDTO updatePasswordDTO);
+    Optional<User> updatePassword(UpdatePasswordDTO updatePasswordDTO,String email);
 
     void createUser(UserDTO userDTO);
 }
