@@ -1,0 +1,1 @@
+ALTER TABLE users ALTER COLUMN reset_password_token TYPE VARCHAR(300);
