@@ -151,16 +151,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = User.fromUserDTO(userDTO);
         user.setActive(false);
         userDao.save(user);
-        String adminEmail = userDao.findAll().get(0).getEmail();
+        String adminUserEmail = userDao.findByRole("ADMIN").getEmail();
         try {
             ImmutableMap<String, Object> model = ImmutableMap.of(
                     "user", user,
                     "expirationDays", tokenExpirationDays,
                     "appUrl", appUrl);
-            String html = modelToHtmlConverter.convert(REQUEST_ACCESS_USER_HTML_TEMPLATE, model);
+//            Will Use once we have the Template ready
+//            String html = modelToHtmlConverter.convert(REQUEST_ACCESS_USER_HTML_TEMPLATE, model);
             EmailDTO emailDTO = EmailDTO.builder()
-                    .content(html)
-                    .recepient(user.getEmail())
+                    .content(REQUEST_ACCESS_USER_HTML_TEMPLATE)
+                    .recepient(adminUserEmail)
                     .subject("Timesheets Manager - Access Request")
                     .build();
             emailService.sendEmail(emailDTO);

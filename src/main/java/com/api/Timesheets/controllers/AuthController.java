@@ -69,7 +69,7 @@ public class AuthController {
         return ResponseEntity.ok("Password Updated Successfully");
     }
 
-    @PostMapping(path = "/{email}/requestAccess")
+    @PostMapping(path = "/requestAccess")
     public ResponseEntity<?> requestAccess(@RequestBody UserDTO userDTO) {
         userService.requestAccess(userDTO);
         return ResponseEntity.ok("Access Request Submitted Successfully");
