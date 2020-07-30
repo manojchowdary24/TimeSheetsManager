@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.api.Timesheets.config.ModelToHtmlConverter.RESET_PASSWORD_USER_HTML_TEMPLATE;
+import static com.api.Timesheets.config.ModelToHtmlConverter.REQUEST_ACCESS_USER_HTML_TEMPLATE;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -144,4 +145,29 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userDao.save(user);
 
     }
+
+    @Override
+    public void requestAccess(UserDTO userDTO) {
+        User user = User.fromUserDTO(userDTO);
+        user.setActive(false);
+        userDao.save(user);
+        String adminEmail = userDao.findAll().get(0).getEmail();
+        try {
+            ImmutableMap<String, Object> model = ImmutableMap.of(
+                    "user", user,
+                    "expirationDays", tokenExpirationDays,
+                    "appUrl", appUrl);
+            String html = modelToHtmlConverter.convert(REQUEST_ACCESS_USER_HTML_TEMPLATE, model);
+            EmailDTO emailDTO = EmailDTO.builder()
+                    .content(html)
+                    .recepient(user.getEmail())
+                    .subject("Timesheets Manager - Access Request")
+                    .build();
+            emailService.sendEmail(emailDTO);
+        } catch (Exception e) {
+            throw new RuntimeException("Error sending email for reset password of user.", e);
+        }
+    }
+
+
 }

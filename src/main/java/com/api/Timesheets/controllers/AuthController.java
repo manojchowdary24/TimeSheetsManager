@@ -5,6 +5,7 @@ import com.api.Timesheets.ExceptionHandlers.GlobalException;
 import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
 import com.api.Timesheets.models.UpdatePasswordDTO;
+import com.api.Timesheets.models.UserDTO;
 import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
@@ -66,6 +67,12 @@ public class AuthController {
         userService.updatePassword(updatePasswordDTO,email).orElseThrow(
                 () -> new GlobalException(HttpStatus.NOT_FOUND.value(), "User not found."));
         return ResponseEntity.ok("Password Updated Successfully");
+    }
+
+    @PostMapping(path = "/{email}/requestAccess")
+    public ResponseEntity<?> requestAccess(@RequestBody UserDTO userDTO) {
+        userService.requestAccess(userDTO);
+        return ResponseEntity.ok("Access Request Submitted Successfully");
     }
 }
 
