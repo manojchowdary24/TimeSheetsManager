@@ -10,6 +10,7 @@ import com.api.Timesheets.models.UserDTO;
 import com.api.Timesheets.repositories.UserRepo;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -151,22 +152,24 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = User.fromUserDTO(userDTO);
         user.setActive(false);
         userDao.save(user);
-        String adminUserEmail = userDao.findByRole("ADMIN").getEmail();
+        User adminUser = userDao.findByRole("ADMIN");
         try {
-            ImmutableMap<String, Object> model = ImmutableMap.of(
-                    "user", user,
-                    "expirationDays", tokenExpirationDays,
-                    "appUrl", appUrl);
+            if(adminUser!=null && StringUtils.isNotEmpty(adminUser.getEmail())) {
+                ImmutableMap<String, Object> model = ImmutableMap.of(
+                        "user", user,
+                        "expirationDays", tokenExpirationDays,
+                        "appUrl", appUrl);
 //            Will Use once we have the Template ready
 //            String html = modelToHtmlConverter.convert(REQUEST_ACCESS_USER_HTML_TEMPLATE, model);
-            EmailDTO emailDTO = EmailDTO.builder()
-                    .content(REQUEST_ACCESS_USER_HTML_TEMPLATE)
-                    .recepient(adminUserEmail)
-                    .subject("Timesheets Manager - Access Request")
-                    .build();
-            emailService.sendEmail(emailDTO);
+                EmailDTO emailDTO = EmailDTO.builder()
+                        .content(REQUEST_ACCESS_USER_HTML_TEMPLATE)
+                        .recepient(adminUser.getEmail())
+                        .subject("Timesheets Manager - Access Request")
+                        .build();
+                emailService.sendEmail(emailDTO);
+            }
         } catch (Exception e) {
-            throw new RuntimeException("Error sending email for reset password of user.", e);
+            throw new RuntimeException("Error sending email for access request of user." + user.getFirstName(), e);
         }
     }
 
