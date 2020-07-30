@@ -15,6 +15,8 @@ public class ModelToHtmlConverter {
 
   public static final String RESET_PASSWORD_USER_HTML_TEMPLATE = "reset_password_email_template.ftl";
 
+  public static final String REQUEST_ACCESS_USER_HTML_TEMPLATE = "access_request_email_template.ftl";
+
   @Autowired
   private Configuration freemarkerConfiguration;
 

@@ -21,5 +21,7 @@ public interface UserService {
 
     Optional<User> updatePassword(UpdatePasswordDTO updatePasswordDTO,String email);
 
+    void requestAccess(UserDTO userDTO);
+
     void createUser(UserDTO userDTO);
 }

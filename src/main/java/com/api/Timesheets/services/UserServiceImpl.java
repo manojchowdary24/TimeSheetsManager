@@ -10,6 +10,7 @@ import com.api.Timesheets.models.UserDTO;
 import com.api.Timesheets.repositories.UserRepo;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.api.Timesheets.config.ModelToHtmlConverter.RESET_PASSWORD_USER_HTML_TEMPLATE;
+import static com.api.Timesheets.config.ModelToHtmlConverter.REQUEST_ACCESS_USER_HTML_TEMPLATE;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -144,4 +146,32 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userDao.save(user);
 
     }
+
+    @Override
+    public void requestAccess(UserDTO userDTO) {
+        User user = User.fromUserDTO(userDTO);
+        user.setActive(false);
+        userDao.save(user);
+        User adminUser = userDao.findByRole("ADMIN");
+        try {
+            if(adminUser!=null && StringUtils.isNotEmpty(adminUser.getEmail())) {
+                ImmutableMap<String, Object> model = ImmutableMap.of(
+                        "user", user,
+                        "expirationDays", tokenExpirationDays,
+                        "appUrl", appUrl);
+//            Will Use once we have the Template ready
+//            String html = modelToHtmlConverter.convert(REQUEST_ACCESS_USER_HTML_TEMPLATE, model);
+                EmailDTO emailDTO = EmailDTO.builder()
+                        .content(REQUEST_ACCESS_USER_HTML_TEMPLATE)
+                        .recepient(adminUser.getEmail())
+                        .subject("Timesheets Manager - Access Request")
+                        .build();
+                emailService.sendEmail(emailDTO);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error sending email for access request of user." + user.getFirstName(), e);
+        }
+    }
+
+
 }
