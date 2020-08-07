@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = User.fromUserDTO(userDTO);
         user.setActive(false);
         userDao.save(user);
-        User adminUser = userDao.findByRole("ADMIN");
+        User adminUser = userDao.findByPermissionsSet("ROLE_ADMIN");
         try {
             if(adminUser!=null && StringUtils.isNotEmpty(adminUser.getEmail())) {
                 ImmutableMap<String, Object> model = ImmutableMap.of(
