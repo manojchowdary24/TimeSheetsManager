@@ -1,0 +1,40 @@
+#database connections
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/timesheets_management
+    password:
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    baseline-on-migrate: true
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: manojkumar.javadev@gmail.com
+    password: password123$
+    port: 465
+    protocol: smtp
+    test-connection: false
+    properties.mail.smtp:
+      auth: true
+      starttls.enabled: true
+
+app:
+  root:
+    url: http://localhost:8080
+
+reset:
+  password:
+    token.expiration.days: 7
+
+---
+
+spring:
+  profiles: prod
+
+app:
+  root:
+    url: Timesheets-manager.netlify.app
