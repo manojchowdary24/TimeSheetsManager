@@ -13,20 +13,19 @@ import java.util.Date;
 @AllArgsConstructor
 public class UserDTO {
 
-    private String username;
+  private String username;
 
-    private String email;
+  private String email;
 
-    private String firstName;
+  private String firstName;
 
-    private String lastName;
+  private String lastName;
 
-    private Boolean changePasswordRequired;
+  private Boolean changePasswordRequired;
 
-    private Date tokenExpDate;
+  private Date tokenExpDate;
 
-    private String resetPasswordToken;
+  private String resetPasswordToken;
 
-    private String permissionsSet;
-
+  private String permissionsSet;
 }

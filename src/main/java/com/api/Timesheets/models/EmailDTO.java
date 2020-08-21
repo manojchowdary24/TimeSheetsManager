@@ -1,6 +1,5 @@
 package com.api.Timesheets.models;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +15,4 @@ public class EmailDTO {
   private String recepient;
   private String subject;
   private String content;
-
-
 }

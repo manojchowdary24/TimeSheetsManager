@@ -15,28 +15,25 @@ import java.util.List;
 @RequestMapping("/api/v1/admin/")
 public class MainController {
 
-    @Autowired
-    private UserRepo repo;
+  @Autowired private UserRepo repo;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @GetMapping
-//  @PreAuthorize("hasRole('ADMIN')")
-    public List listUser() {
-        return userService.findAll();
-    }
+  @GetMapping
+  //  @PreAuthorize("hasRole('ADMIN')")
+  public List listUser() {
+    return userService.findAll();
+  }
 
-    @GetMapping("users")
-    public List<User> getUsers() {
-        return repo.findAll();
-    }
+  @GetMapping("users")
+  public List<User> getUsers() {
+    return repo.findAll();
+  }
 
-    @PostMapping("createUser")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
-        userService.createUser(userDTO);
-        return ResponseEntity.ok("User created successfully");
-    }
-
+  @PostMapping("createUser")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
+    userService.createUser(userDTO);
+    return ResponseEntity.ok("User created successfully");
+  }
 }

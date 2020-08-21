@@ -22,31 +22,31 @@ import java.io.IOException;
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String BEARER = "Bearer ";
+  private static final String BEARER = "Bearer ";
 
-    @Autowired
-    private JWTUtil jwtUtil;
+  @Autowired private JWTUtil jwtUtil;
 
-    @Autowired
-    private UserServiceImpl userDetails;
+  @Autowired private UserServiceImpl userDetails;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = CookieUtils.getTokenFromRequest(request).orElse(null);
-        if (token == null) {
-            token = request.getHeader("Authorization");
-            if (Strings.isNullOrEmpty(token) || !token.startsWith(BEARER)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-        }
-        String finalToken = token.replace(BEARER, "");
-        Claims claims = jwtUtil.getDetailsFromTokenAndValidate(finalToken);
-        String userName = claims.getSubject();
-        UserDetails details = userDetails.loadUserByUsername(userName);
-        Authentication auth = new UsernamePasswordAuthenticationToken(userName, null, details.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(auth);
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    String token = CookieUtils.getTokenFromRequest(request).orElse(null);
+    if (token == null) {
+      token = request.getHeader("Authorization");
+      if (Strings.isNullOrEmpty(token) || !token.startsWith(BEARER)) {
         filterChain.doFilter(request, response);
+        return;
+      }
     }
+    String finalToken = token.replace(BEARER, "");
+    Claims claims = jwtUtil.getDetailsFromTokenAndValidate(finalToken);
+    String userName = claims.getSubject();
+    UserDetails details = userDetails.loadUserByUsername(userName);
+    Authentication auth =
+        new UsernamePasswordAuthenticationToken(userName, null, details.getAuthorities());
+    SecurityContextHolder.getContext().setAuthentication(auth);
+    filterChain.doFilter(request, response);
+  }
 }
-

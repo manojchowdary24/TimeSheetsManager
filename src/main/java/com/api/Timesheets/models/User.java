@@ -22,90 +22,89 @@ import java.util.Date;
 @Builder
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Column(name = "user_name")
-    private String username;
-    @Column
-    private String email;
+  @Column(name = "user_name")
+  private String username;
 
-    @Column(name = "first_name")
-    private String firstName;
+  @Column private String email;
 
-    @Column(name = "last_name")
-    private String lastName;
+  @Column(name = "first_name")
+  private String firstName;
 
-    @Column
-    private Boolean active = true;
+  @Column(name = "last_name")
+  private String lastName;
 
-    @Column(name = "change_password_required")
-    private Boolean changePasswordRequired = false;
+  @Column private Boolean active = true;
 
-    @Column(name = "reset_pw_token_exp_date")
-    @JsonIgnore
-    private Date tokenExpDate;
+  @Column(name = "change_password_required")
+  private Boolean changePasswordRequired = false;
 
-    @Column(name = "reset_password_token")
-    @JsonIgnore
-    private String resetPasswordToken;
+  @Column(name = "reset_pw_token_exp_date")
+  @JsonIgnore
+  private Date tokenExpDate;
 
-    @Column(name = "permissions_set")
-    @JsonIgnore
-    private String permissionsSet = "ROLE_USER";
+  @Column(name = "reset_password_token")
+  @JsonIgnore
+  private String resetPasswordToken;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date",insertable=false)
-    private Date createDate;
+  @Column(name = "permissions_set")
+  @JsonIgnore
+  private String permissionsSet = "ROLE_USER";
 
-    @Column(name = "created_by")
-    private String createBy;
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "create_date", insertable = false)
+  private Date createDate;
 
-    @Column(name = "update_date")
-    private Date updateDate;
+  @Column(name = "created_by")
+  private String createBy;
 
-    @Column(name = "update_by")
-    private String updateBy;
+  @Column(name = "update_date")
+  private Date updateDate;
 
-    @Column
-    @JsonIgnore
-    private String password;
+  @Column(name = "update_by")
+  private String updateBy;
 
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(this.permissionsSet));
-    }
+  @Column @JsonIgnore private String password;
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  public static User fromUserDTO(UserDTO userDTO) {
+    return User.builder()
+        .firstName(userDTO.getFirstName())
+        .lastName(userDTO.getLastName())
+        .username(userDTO.getUsername())
+        .changePasswordRequired(userDTO.getChangePasswordRequired())
+        .email(userDTO.getEmail())
+        .permissionsSet(userDTO.getPermissionsSet())
+        .resetPasswordToken(userDTO.getResetPasswordToken())
+        .tokenExpDate(userDTO.getTokenExpDate())
+        .build();
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+  @Override
+  @JsonIgnore
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return Arrays.asList(new SimpleGrantedAuthority(this.permissionsSet));
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return !this.changePasswordRequired;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return this.active;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
 
-    public static User fromUserDTO(UserDTO userDTO) {
-        return User.builder().firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .username(userDTO.getUsername())
-                .changePasswordRequired(userDTO.getChangePasswordRequired())
-                .email(userDTO.getEmail())
-                .permissionsSet(userDTO.getPermissionsSet())
-                .resetPasswordToken(userDTO.getResetPasswordToken())
-                .tokenExpDate(userDTO.getTokenExpDate()).build();
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return !this.changePasswordRequired;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return this.active;
+  }
 }

@@ -26,4 +26,3 @@ public class OauthTokenResponse {
 
   private String scope;
 }
-

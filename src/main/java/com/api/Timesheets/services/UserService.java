@@ -11,17 +11,17 @@ import java.util.Optional;
 @Service
 public interface UserService {
 
-    User save(User user);
+  User save(User user);
 
-    List<User> findAll();
+  List<User> findAll();
 
-    void delete(Integer id);
+  void delete(Integer id);
 
-    public Optional<User> resetPassword(String email);
+  public Optional<User> resetPassword(String email);
 
-    Optional<User> updatePassword(UpdatePasswordDTO updatePasswordDTO,String email);
+  Optional<User> updatePassword(UpdatePasswordDTO updatePasswordDTO, String email);
 
-    void requestAccess(UserDTO userDTO);
+  void requestAccess(UserDTO userDTO);
 
-    void createUser(UserDTO userDTO);
+  void createUser(UserDTO userDTO);
 }

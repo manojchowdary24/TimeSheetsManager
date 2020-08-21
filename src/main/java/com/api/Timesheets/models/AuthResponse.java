@@ -1,6 +1,5 @@
 package com.api.Timesheets.models;
 
-
 public class AuthResponse {
   private String accessToken;
   private String tokenType = "Bearer";

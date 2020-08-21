@@ -9,11 +9,11 @@ import org.joda.time.DateTimeZone;
 import org.springframework.http.HttpStatus;
 
 @NoArgsConstructor
-public class GlobalException extends RuntimeException{
-
+public class GlobalException extends RuntimeException {
 
   @JsonSerialize(using = DateTimeSerializerBase.class)
   private String timestamp;
+
   private Integer status;
   private String error;
   private String exception;

@@ -1,26 +1,26 @@
-//package com.api.Timesheets.UserTest;
+// package com.api.Timesheets.UserTest;
 //
-//import com.api.Timesheets.controllers.MainController;
-//import com.api.Timesheets.models.LoginRequest;
-//import org.junit.Assert;
-//import org.junit.Ignore;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.InjectMocks;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.web.server.LocalServerPort;
-//import org.springframework.http.HttpEntity;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.test.context.junit4.SpringRunner;
-//import org.springframework.web.client.RestTemplate;
+// import com.api.Timesheets.controllers.MainController;
+// import com.api.Timesheets.models.LoginRequest;
+// import org.junit.Assert;
+// import org.junit.Ignore;
+// import org.junit.Test;
+// import org.junit.runner.RunWith;
+// import org.mockito.InjectMocks;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.boot.web.server.LocalServerPort;
+// import org.springframework.http.HttpEntity;
+// import org.springframework.http.HttpMethod;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.test.context.junit4.SpringRunner;
+// import org.springframework.web.client.RestTemplate;
 //
-//import java.net.URI;
-//import java.net.URISyntaxException;
+// import java.net.URI;
+// import java.net.URISyntaxException;
 //
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//public class LoginPageTest {
+// @RunWith(SpringRunner.class)
+// @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// public class LoginPageTest {
 //
 //    @InjectMocks
 //    private MainController controller;
@@ -50,9 +50,10 @@
 //
 //        final String baseUrl2 = "http://localhost:" + randomServerPort + "/users/user";
 //        URI uri2 = new URI(baseUrl2);
-//        ResponseEntity<String> response = restTemplate.exchange(uri2, HttpMethod.GET, entity, String.class);
+//        ResponseEntity<String> response = restTemplate.exchange(uri2, HttpMethod.GET, entity,
+// String.class);
 //
 //        //Verify request succeed
 //        Assert.assertEquals(201, result.getStatusCodeValue());
 //    }
-//}
+// }

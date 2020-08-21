@@ -37,4 +37,4 @@ spring:
 
 app:
   root:
-    url: Timesheets-manager.netlify.app
+    url: https://timesheets-manager.netlify.app/
