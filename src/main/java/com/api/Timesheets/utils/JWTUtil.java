@@ -1,6 +1,7 @@
 package com.api.Timesheets.utils;
 
 import io.jsonwebtoken.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -43,4 +44,9 @@ public class JWTUtil {
     }
     return result;
   }
+
+  public static String generateTempToken() {
+    return RandomStringUtils.random(12, true, true);
+  }
+
 }

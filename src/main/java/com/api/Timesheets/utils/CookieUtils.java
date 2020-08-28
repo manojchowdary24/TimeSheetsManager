@@ -1,9 +1,12 @@
 package com.api.Timesheets.utils;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Optional;
 
 public final class CookieUtils {
 
@@ -38,10 +41,23 @@ public final class CookieUtils {
         .map(Cookie::getValue);
   }
 
-  public static Cookie expireCookie(String cookieName) {
-    Cookie cookie = new Cookie(cookieName, null);
+  public static List<Cookie> expireCookies(HttpServletRequest request) {
+    final Cookie[] cookies = request.getCookies();
+    if (cookies == null) {
+      return Collections.emptyList();
+    }
+    return Arrays.stream(cookies)
+    .map(CookieUtils::expireCookie)
+    .collect(Collectors.toList());
+  }
+
+  public static Cookie expireCookie(Cookie cookie){
+    cookie = new Cookie(cookie.getName(), null);
     cookie.setMaxAge(0);
     cookie.setPath("/");
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
+
     return cookie;
   }
 

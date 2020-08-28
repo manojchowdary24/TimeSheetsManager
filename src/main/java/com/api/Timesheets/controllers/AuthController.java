@@ -1,28 +1,39 @@
 package com.api.Timesheets.controllers;
 
+import static com.api.Timesheets.utils.CookieUtils.TOKEN;
+import static com.api.Timesheets.utils.CookieUtils.USER;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import com.api.Timesheets.ExceptionHandlers.GlobalException;
 import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
 import com.api.Timesheets.models.UpdatePasswordDTO;
 import com.api.Timesheets.models.UserDTO;
+import com.api.Timesheets.models.UserDetailsImpl;
 import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import static com.api.Timesheets.utils.CookieUtils.TOKEN;
-import static com.api.Timesheets.utils.CookieUtils.USER;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
@@ -72,5 +83,36 @@ public class AuthController {
   public ResponseEntity<?> requestAccess(@RequestBody UserDTO userDTO) {
     userService.requestAccess(userDTO);
     return ResponseEntity.ok("Access Request Submitted Successfully");
+  }
+
+  @PostMapping(path = "/logout")
+  public void logout(HttpServletRequest request, HttpServletResponse response) {
+    List<Cookie> cookies = CookieUtils.expireCookies(request);
+    for (Cookie cookie : cookies) {
+      response.addCookie(cookie);
+    }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null) {
+      new SecurityContextLogoutHandler().logout(request, response, auth);
+    }
+  }
+
+  @GetMapping("/me")
+  public UserDetails getCurrentUserDetails(HttpServletRequest request) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String username = null;
+    if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
+      try {
+        username =
+            ((org.springframework.security.core.userdetails.User) auth.getPrincipal())
+                .getUsername();
+      } catch (Exception e) {
+        username = ((UserDetailsImpl) auth.getPrincipal()).getUsername();
+      }
+    } else {
+      throw new GlobalException(
+          HttpStatus.FORBIDDEN.value(), "Unable to Obtain user login details, please login again");
+    }
+    return userService.loadUserByUsername(username);
   }
 }

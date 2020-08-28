@@ -1,26 +1,37 @@
 package com.api.Timesheets.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "user_name"),
+    @UniqueConstraint(columnNames = "email")
+})
 @Builder
-public class User implements UserDetails {
+public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +48,10 @@ public class User implements UserDetails {
   @Column(name = "last_name")
   private String lastName;
 
-  @Column private Boolean active = true;
+  @Column private Boolean active;
 
   @Column(name = "change_password_required")
-  private Boolean changePasswordRequired = false;
+  private Boolean changePasswordRequired;
 
   @Column(name = "reset_pw_token_exp_date")
   @JsonIgnore
@@ -50,9 +61,9 @@ public class User implements UserDetails {
   @JsonIgnore
   private String resetPasswordToken;
 
-  @Column(name = "permissions_set")
-  @JsonIgnore
-  private String permissionsSet = "ROLE_USER";
+//  @Column(name = "permissions_set")
+//  @JsonIgnore
+//  private String permissionsSet = "ROLE_USER";
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date", insertable = false)
@@ -69,42 +80,20 @@ public class User implements UserDetails {
 
   @Column @JsonIgnore private String password;
 
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(	name = "user_roles",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles = new HashSet<>();
+
   public static User fromUserDTO(UserDTO userDTO) {
     return User.builder()
         .firstName(userDTO.getFirstName())
         .lastName(userDTO.getLastName())
-        .username(userDTO.getUsername())
-        .changePasswordRequired(userDTO.getChangePasswordRequired())
+        .username(userDTO.getUserName())
         .email(userDTO.getEmail())
-        .permissionsSet(userDTO.getPermissionsSet())
-        .resetPasswordToken(userDTO.getResetPasswordToken())
-        .tokenExpDate(userDTO.getTokenExpDate())
+        .changePasswordRequired(true)
         .build();
   }
 
-  @Override
-  @JsonIgnore
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Arrays.asList(new SimpleGrantedAuthority(this.permissionsSet));
-  }
-
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
-
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return !this.changePasswordRequired;
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return this.active;
-  }
 }

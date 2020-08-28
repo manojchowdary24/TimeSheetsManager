@@ -54,7 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(
             "/oauth/**",
             "/auth/**",
-            "/api/v1/**",
             "/",
             "/error",
             "/favicon.ico",

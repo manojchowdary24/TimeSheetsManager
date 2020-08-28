@@ -1,6 +1,5 @@
 package com.api.Timesheets.security;
 
-import com.api.Timesheets.services.UserServiceImpl;
 import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
 import com.google.common.base.Strings;

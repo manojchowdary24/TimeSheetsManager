@@ -1,11 +1,11 @@
 package com.api.Timesheets.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @Builder
@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class UserDTO {
 
-  private String username;
+  private String userName;
 
   private String email;
 
@@ -21,11 +21,10 @@ public class UserDTO {
 
   private String lastName;
 
-  private Boolean changePasswordRequired;
+  private Set<String> roles;
 
-  private Date tokenExpDate;
+  private Boolean active;
 
-  private String resetPasswordToken;
-
-  private String permissionsSet;
+  @JsonIgnore
+  private String password;
 }
