@@ -1,5 +1,6 @@
 package com.api.Timesheets.security;
 
+import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
 import com.google.common.base.Strings;
@@ -25,7 +26,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   @Autowired private JWTUtil jwtUtil;
 
-  @Autowired private UserServiceImpl userDetails;
+  @Autowired private UserService userDetails;
 
   @Override
   protected void doFilterInternal(

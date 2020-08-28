@@ -27,7 +27,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("userService")
 public class UserService implements UserDetailsService {
 
   @Value("${reset.password.token.expiration.days}")
@@ -35,6 +35,9 @@ public class UserService implements UserDetailsService {
 
   @Autowired
   private UserRepo userDao;
+
+  @Autowired
+  private AdminService adminService;
 
   @Autowired private BCryptPasswordEncoder passwordEncoder;
 
@@ -130,7 +133,7 @@ public class UserService implements UserDetailsService {
     User user = User.fromUserDTO(userDTO);
     user.setActive(false);
     userDao.save(user);
-    User adminUser = userDao.findByPermissionsSet("ROLE_ADMIN");
+    User adminUser = adminService.getAdmin();
     try {
       if (adminUser != null && StringUtils.isNotEmpty(adminUser.getEmail())) {
         ImmutableMap<String, Object> model =

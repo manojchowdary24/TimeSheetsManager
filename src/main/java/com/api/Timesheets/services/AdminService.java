@@ -1,5 +1,6 @@
 package com.api.Timesheets.services;
 
+import static com.api.Timesheets.enums.Role.ROLE_ADMIN;
 import static com.api.Timesheets.utils.JWTUtil.generateTempToken;
 
 import com.api.Timesheets.ExceptionHandlers.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import com.api.Timesheets.repositories.UserRepo;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ public class AdminService {
               case "Admin":
                 com.api.Timesheets.models.Role adminRole =
                     roleRepository
-                        .findByName(Role.ROLE_ADMIN)
+                        .findByName(ROLE_ADMIN)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 roles.add(adminRole);
 
@@ -85,5 +87,12 @@ public class AdminService {
     user.setActive(userDTO.getActive());
     userRepository.save(user);
     return ResponseEntity.ok("User Updated successfully");
+  }
+
+  public User getAdmin() {
+    return userRepository.findByPermissionsSet(ROLE_ADMIN).stream()
+        .filter(user -> (user.getEmail() != null && StringUtils.isNotEmpty(user.getEmail())))
+        .findFirst()
+        .get();
   }
 }

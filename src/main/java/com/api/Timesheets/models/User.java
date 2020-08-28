@@ -61,10 +61,6 @@ public class User {
   @JsonIgnore
   private String resetPasswordToken;
 
-//  @Column(name = "permissions_set")
-//  @JsonIgnore
-//  private String permissionsSet = "ROLE_USER";
-
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date", insertable = false)
   private Date createDate;
