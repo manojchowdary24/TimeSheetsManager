@@ -9,6 +9,7 @@ import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
 import com.api.Timesheets.models.UpdatePasswordDTO;
 import com.api.Timesheets.models.UserDTO;
+import com.api.Timesheets.services.AdminService;
 import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -43,6 +45,8 @@ public class AuthController {
   @Autowired private UserService userService;
 
   @Autowired private JWTUtil jwtUtil;
+
+  @Autowired private AdminService adminService;
 
   @PostMapping("/login")
   public ResponseEntity<?> authenticateUser(
@@ -79,9 +83,8 @@ public class AuthController {
   }
 
   @PostMapping(path = "/requestAccess")
-  public ResponseEntity<?> requestAccess(@RequestBody UserDTO userDTO) {
-    userService.requestAccess(userDTO);
-    return ResponseEntity.ok("Access Request Submitted Successfully");
+  public HttpEntity<?> requestAccess(@RequestBody UserDTO userDTO) {
+    return adminService.createUser(userDTO);
   }
 
   @PostMapping(path = "/logout")

@@ -70,7 +70,7 @@ public class AdminService {
           });
     }
     User user = User.fromUserDTO(userDTO);
-    user.setPassword(encoder.encode(userDTO.getPassword()));
+    user.setPassword(encoder.encode(userDTO.getUserName()));
     user.setActive(true);
     user.setResetPasswordToken(encoder.encode(generateTempToken()));
     user.setRoles(roles);
