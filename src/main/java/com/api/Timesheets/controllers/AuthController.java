@@ -9,7 +9,6 @@ import com.api.Timesheets.models.AuthResponse;
 import com.api.Timesheets.models.LoginRequest;
 import com.api.Timesheets.models.UpdatePasswordDTO;
 import com.api.Timesheets.models.UserDTO;
-import com.api.Timesheets.models.UserDetailsImpl;
 import com.api.Timesheets.services.UserService;
 import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
@@ -102,13 +101,7 @@ public class AuthController {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String username = null;
     if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
-      try {
-        username =
-            ((org.springframework.security.core.userdetails.User) auth.getPrincipal())
-                .getUsername();
-      } catch (Exception e) {
-        username = ((UserDetailsImpl) auth.getPrincipal()).getUsername();
-      }
+      username =(String) auth.getPrincipal();
     } else {
       throw new GlobalException(
           HttpStatus.FORBIDDEN.value(), "Unable to Obtain user login details, please login again");
