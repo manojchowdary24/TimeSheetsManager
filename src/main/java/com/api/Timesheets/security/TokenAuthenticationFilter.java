@@ -5,6 +5,8 @@ import com.api.Timesheets.utils.CookieUtils;
 import com.api.Timesheets.utils.JWTUtil;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,8 @@ import java.io.IOException;
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
   private static final String BEARER = "Bearer ";
 
   @Autowired private JWTUtil jwtUtil;
@@ -33,6 +37,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     String token = CookieUtils.getTokenFromRequest(request).orElse(null);
+    LOGGER.info("token From cookies ====={}",token);
     if (token == null) {
       token = request.getHeader("Authorization");
       if (Strings.isNullOrEmpty(token) || !token.startsWith(BEARER)) {

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,8 @@ import org.springframework.stereotype.Service;
 
 @Service("userService")
 public class UserService implements UserDetailsService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
   @Value("${reset.password.token.expiration.days}")
   private Integer tokenExpirationDays;
