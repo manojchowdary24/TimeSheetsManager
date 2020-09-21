@@ -2,6 +2,7 @@ package com.api.Timesheets.security;
 
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -80,21 +84,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return new BCryptPasswordEncoder();
   }
 
-//  @Bean
-//  public FilterRegistrationBean corsFilter() {
-//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//    CorsConfiguration config = new CorsConfiguration();
-//    config.setAllowCredentials(true);
-////    config.addAllowedOrigin("*");
-////    config.addAllowedHeader("*");
-////    config.addAllowedMethod("*");
+  @Bean
+  public FilterRegistrationBean corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.addAllowedOrigin("*");
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("*");
 //    config.setAllowedOrigins(Collections.singletonList("https://timesheets-manager.netlify.app/")); // todo properties by environment
 //    config.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
 //    config.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));
-//
-//    source.registerCorsConfiguration("/**", config);
-//    FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-//    bean.setOrder(0);
-//    return bean;
-//  }
+
+    source.registerCorsConfiguration("/**", config);
+    FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+    bean.setOrder(0);
+    return bean;
+  }
 }
