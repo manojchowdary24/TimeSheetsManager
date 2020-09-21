@@ -1,7 +1,6 @@
 package com.api.Timesheets.controllers;
 
 import static com.api.Timesheets.utils.CookieUtils.TOKEN;
-import static com.api.Timesheets.utils.CookieUtils.USER;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.api.Timesheets.ExceptionHandlers.GlobalException;
@@ -59,9 +58,8 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));
     String token = jwtUtil.generateToken(authentication);
-
-    response.addCookie(CookieUtils.createCookie(USER, authentication.getName()));
-    response.addCookie(CookieUtils.createCookie(TOKEN, token));
+    response.addHeader("Set-Cookie", CookieUtils.createCookie(TOKEN, token).toString());
+//    response.addHeader(CookieUtils.createCookie(TOKEN, token));
 
     return ResponseEntity.ok(new AuthResponse("Bearer " + token));
   }

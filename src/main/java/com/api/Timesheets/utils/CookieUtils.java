@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseCookie;
 
 public final class CookieUtils {
 
@@ -63,14 +64,20 @@ public final class CookieUtils {
     return cookie;
   }
 
-  public static Cookie createCookie(String cookieKey, String cookieValue) {
+  public static ResponseCookie createCookie(String cookieKey, String cookieValue) {
 
-    Cookie cookie = new Cookie(cookieKey, cookieValue);
-    cookie.setMaxAge(-1);
-    cookie.setPath("/");
-    cookie.setHttpOnly(true);
-    cookie.setSecure(true);
-    cookie.setDomain(".timesheets-manager.netlify.app");
+    ResponseCookie cookie = ResponseCookie.from(cookieKey, cookieValue)
+        .maxAge(-1)
+        .path("/")
+        .httpOnly(true)
+        .secure(true)
+        .sameSite("None")
+        .build();
+//    cookie.setMaxAge(-1);
+//    cookie.setPath("/");
+//    cookie.setHttpOnly(true);
+//    cookie.setSecure(true);
+//    cookie.setDomain(".timesheets-manager.netlify.app");
 
     return cookie;
   }
