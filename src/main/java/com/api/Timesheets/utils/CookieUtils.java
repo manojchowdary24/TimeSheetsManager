@@ -32,10 +32,12 @@ public final class CookieUtils {
 
   public static Optional<String> getTokenFromRequest(HttpServletRequest request) {
     final Cookie[] cookies = request.getCookies();
+    System.out.println("Cookies length ====== "+ cookies.length);
     if (cookies == null) {
       return Optional.empty();
     }
     return Arrays.stream(cookies)
+        .peek(x -> System.out.println(x.getName()+" ==== "+ x.getValue() + " ===== "+ x.getDomain()+" ===== "+x.getSecure()))
         .filter(cookie -> cookie.getName().equals(TOKEN))
         .findFirst()
         .map(Cookie::getValue);
