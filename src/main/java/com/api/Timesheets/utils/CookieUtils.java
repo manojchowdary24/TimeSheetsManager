@@ -70,6 +70,7 @@ public final class CookieUtils {
     cookie.setPath("/");
     cookie.setHttpOnly(true);
     cookie.setSecure(true);
+    cookie.setDomain("https://timesheets-manager.netlify.app");
 
     return cookie;
   }
