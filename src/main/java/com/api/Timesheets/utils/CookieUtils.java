@@ -64,20 +64,21 @@ public final class CookieUtils {
     return cookie;
   }
 
-  public static ResponseCookie createCookie(String cookieKey, String cookieValue) {
+  public static Cookie createCookie(String cookieKey, String cookieValue) {
 
-    ResponseCookie cookie = ResponseCookie.from(cookieKey, cookieValue)
-        .maxAge(-1)
-        .path("/")
-        .httpOnly(true)
-        .secure(true)
-        .sameSite("None")
-        .domain(".timesheets-manager.netlify.app")
-        .build();
-//    cookie.setMaxAge(-1);
-//    cookie.setPath("/");
-//    cookie.setHttpOnly(true);
-//    cookie.setSecure(true);
+//    ResponseCookie cookie = ResponseCookie.from(cookieKey, cookieValue)
+//        .maxAge(-1)
+//        .path("/")
+//        .httpOnly(true)
+//        .secure(true)
+//        .sameSite("None")
+//        .domain(".timesheets-manager.netlify.app")
+//        .build();
+    Cookie cookie = new Cookie(cookieKey,cookieValue);
+    cookie.setMaxAge(-1);
+    cookie.setPath("/");
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
 //    cookie.setDomain(".timesheets-manager.netlify.app");
 
     return cookie;
