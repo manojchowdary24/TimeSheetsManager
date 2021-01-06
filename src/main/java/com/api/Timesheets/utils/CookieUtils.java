@@ -77,8 +77,8 @@ public final class CookieUtils {
     Cookie cookie = new Cookie(cookieKey,cookieValue);
     cookie.setMaxAge(-1);
     cookie.setPath("/");
-    cookie.setHttpOnly(true);
-//    cookie.setSecure(true);
+//    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
 //    cookie.setDomain(".timesheets-manager.netlify.app");
 
     return cookie;
