@@ -20,7 +20,7 @@
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
         <node.version>v10.13.0</node.version>
         <yarn.version>6.12.0</yarn.version>
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <springfox-swagger2.version>2.10.0</springfox-swagger2.version>
     </properties>
     <repositories>
         <!-- ... possibly other repository elements ... -->
